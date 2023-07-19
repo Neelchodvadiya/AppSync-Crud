@@ -1,0 +1,96 @@
+
+service: appsynccrudneel
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+
+
+plugins:
+   - serverless-appsync-plugin
+
+
+custom:
+  appSync:
+      name: appsync-todo-apis-demo
+      schema: AppSync/schema.graphql
+      authenticationType: API_KEY
+      mappingTemplates:      
+        - type: Mutation
+          field: createTodo
+          dataSource: createTodoFunction
+          request: false
+          response: false
+
+        - type: Mutation
+          field: getOneTodo
+          dataSource: getOneTodoFunction
+          request: false
+          response: false
+          
+        - type: Query
+          field: getTodos
+          dataSource: getTodosFunction
+          request: false
+          response: false   
+
+        - type: Mutation
+          field: deleteTodo
+          dataSource: deleteTodoFunction
+          request: false
+          response: false
+
+        - type: Mutation
+          field: updateTodo
+          dataSource: updateTodoFunction
+          request: false
+          response: false
+
+      dataSources:        
+        - type: AWS_LAMBDA
+          name: createTodoFunction
+          config:
+            functionName: createTodo
+
+        - type: AWS_LAMBDA
+          name: getTodosFunction
+          config:
+            functionName: getTodos 
+
+        - type: AWS_LAMBDA
+          name: getOneTodoFunction
+          config:
+            functionName: getOneTodo 
+
+        - type: AWS_LAMBDA
+          name: deleteTodoFunction
+          config:
+            functionName: deleteTodo
+
+        - type: AWS_LAMBDA
+          name: updateTodoFunction
+          config:
+            functionName: updateTodo
+
+functions:   
+
+  createTodo:
+    handler: handler.createTodo
+
+  getTodos:
+    handler: handler.getTodos
+
+  getOneTodo:
+    handler: handler.getOneTodo
+
+  deleteTodo:
+    handler: handler.deleteTodo
+
+  updateTodo:
+    handler: handler.updateTodo
+
+ 
